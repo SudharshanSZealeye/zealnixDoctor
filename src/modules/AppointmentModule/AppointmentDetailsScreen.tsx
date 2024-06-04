@@ -1,7 +1,7 @@
-import {useNavigation} from '@react-navigation/native';
-import {useFormik} from 'formik';
-import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { useFormik } from 'formik';
+import React, { useEffect, useState } from 'react';
+import { ScrollView, StyleSheet } from 'react-native';
 import {
   Button,
   Flex,
@@ -11,12 +11,12 @@ import {
   Loader,
 } from 'squashapps-react-native-uikit';
 import moment from 'moment';
-import {useDispatch, useSelector} from 'react-redux';
-import {useSafeAreaFrame} from 'react-native-safe-area-context';
+import { useDispatch, useSelector } from 'react-redux';
+import { useSafeAreaFrame } from 'react-native-safe-area-context';
 
-import {APP_THEME} from '../../utils/constants';
-import {useLanguage} from '../../utils/useLanguage';
-import {AppDispatch, RootState} from '../../redux/store';
+import { APP_THEME } from '../../utils/constants';
+import { useLanguage } from '../../utils/useLanguage';
+import { AppDispatch, RootState } from '../../redux/store';
 import AppointmentDetails from './AppointmentDetails';
 import AppointmentDetailsProfile from './AppointmentDetailsProfile';
 import DocumentList from './DocumentList';
@@ -31,12 +31,13 @@ import {
   tokenGenerateMiddleWare,
   vitalListMiddleWare,
 } from './store/appoinmentMiddleware';
-import {getCurentMini} from '../../utils/helpers';
+import { getCurentMini } from '../../utils/helpers';
 import CancelAppointmentPopup from './CancelAppointmentPopup';
+import { tabletList } from './mock';
 
-const {isEmpty} = validators;
-const {THIS_FIELD_REQUIRED} = useLanguage;
-const {PRIMARY_COLOR_500} = getColors(APP_THEME);
+const { isEmpty } = validators;
+const { THIS_FIELD_REQUIRED } = useLanguage;
+const { PRIMARY_COLOR_500 } = getColors(APP_THEME);
 
 const styles = StyleSheet.create({
   overAll: {
@@ -115,41 +116,14 @@ const AppointmentDetailsScreen = () => {
   const handleAddDataClose = () => setAddData(false);
   const handleCancelOpen = () => setCancelVisibe(true);
   const handleCancelClose = () => setCancelVisibe(false);
-  const {height} = useSafeAreaFrame();
+  const { height } = useSafeAreaFrame();
   const [detailsLoading, setDetailsLoading] = useState(false);
   const [cancelReason, setCanelReason] = useState('');
 
   const handleSave = (values: formType) => {
-    const bp = values.bloodPressure.split('-');
-    if (values.appointmentId !== '') {
-      dispatch(
-        patchVitalMiddleWare({
-          temperature: parseInt(values.bodyTemperature, 10),
-          id: values.id,
-          systolicBloodPressure: parseInt(bp[0], 10),
-          diastolicBloodPressure: parseInt(bp[1], 10),
-          bloodSugar: parseInt(values.bloodSugar, 10),
-          weight: parseInt(values.bodyWeight, 10),
-          height: parseInt(values.height, 10),
-          appointmentId: values.appointmentId,
-          patientId: values.patientId,
-        }),
-      ).then(res => {
-        if (res) {
-          dispatch(
-            vitalListMiddleWare({
-              where: {
-                appointmentId: values.appointmentId,
-              },
-            }),
-          ).then(response => {
-            if (response) {
-              handleAddDataClose();
-            }
-          });
-        }
-      });
-    }
+
+    handleAddDataClose();
+
   };
 
   const formik = useFormik({
@@ -189,7 +163,7 @@ const AppointmentDetailsScreen = () => {
   const handleStatusChange = (status: string) => {
     if (status === 'completed') {
       setDetailsLoading(true);
-      dispatch(patchAppoinmentDetailsMiddleWare({...data, status})).then(
+      dispatch(patchAppoinmentDetailsMiddleWare({ ...data, status })).then(
         res => {
           if (res) {
             dispatch(
@@ -198,7 +172,7 @@ const AppointmentDetailsScreen = () => {
                   'appointmentSchedule.appointmentRangeEnd': {
                     $gte: getCurentMini(),
                   },
-                  appointmentDate: {$gte: moment().startOf('day')},
+                  appointmentDate: { $gte: moment().startOf('day') },
                 },
                 include: [
                   'hospital',
@@ -211,7 +185,7 @@ const AppointmentDetailsScreen = () => {
               if (response?.payload) {
                 navigation.navigate('BottomTab', {
                   screen: 'AppointmentTab',
-                  params: {screen: 'AppointmentsScreen'},
+                  params: { screen: 'AppointmentsScreen' },
                 });
               }
             });
@@ -267,30 +241,30 @@ const AppointmentDetailsScreen = () => {
     }
   };
 
-  useEffect(() => {
-    if (vitalRecord?.appointmentId) {
-      formik.setFieldValue('bodyTemperature', vitalRecord.temperature);
-      formik.setFieldValue(
-        'bloodPressure',
-        `${vitalRecord.diastolicBloodPressure}-${vitalRecord.systolicBloodPressure}`,
-      );
-      formik.setFieldValue('bloodSugar', vitalRecord.bloodSugar);
-      formik.setFieldValue('bodyWeight', vitalRecord.weight);
-      formik.setFieldValue('bodyTemperature', vitalRecord.temperature);
-      formik.setFieldValue('height', vitalRecord.height);
-      formik.setFieldValue('id', vitalRecord.id);
-      formik.setFieldValue('appointmentId', vitalRecord.appointmentId);
-      formik.setFieldValue('patientId', vitalRecord.patientId);
-    }
-  }, [vitalRecord]);
+  // useEffect(() => {
+  //   if (vitalRecord?.appointmentId) {
+  //     formik.setFieldValue('bodyTemperature', vitalRecord.temperature);
+  //     formik.setFieldValue(
+  //       'bloodPressure',
+  //       `${vitalRecord.diastolicBloodPressure}-${vitalRecord.systolicBloodPressure}`,
+  //     );
+  //     formik.setFieldValue('bloodSugar', vitalRecord.bloodSugar);
+  //     formik.setFieldValue('bodyWeight', vitalRecord.weight);
+  //     formik.setFieldValue('bodyTemperature', vitalRecord.temperature);
+  //     formik.setFieldValue('height', vitalRecord.height);
+  //     formik.setFieldValue('id', vitalRecord.id);
+  //     formik.setFieldValue('appointmentId', vitalRecord.appointmentId);
+  //     formik.setFieldValue('patientId', vitalRecord.patientId);
+  //   }
+  // }, [vitalRecord]);
 
   const handleFullView = () => setView(true);
   const handlePrescribe = () => {
     navigation.navigate('PrescribeMedicineScreen', {
-      appointmentId: data.id,
+      appointmentId: "",
     });
   };
-  const ButtonsDisplay = ({status, type}: any) => {
+  const ButtonsDisplay = ({ status, type }: any) => {
     if (status === 'upcoming') {
       const startAppointmentTitle =
         type === 'video' ? 'Start Video Call' : 'Start Appointment';
@@ -374,40 +348,39 @@ const AppointmentDetailsScreen = () => {
       <ScrollView
         contentContainerStyle={styles.overAll}
         bounces={false}
-        style={{height: height - 320}}>
+        style={{ height: height - 320 }}>
         <Flex between>
           <AppointmentDetailsProfile data={data} />
-          {vitalRecord?.appointmentId && (
-            <Flex>
-              <Text type="heading500" overrideStyle={{marginTop: 20}}>
-                Record Vitals:
-              </Text>
 
-              <RecordVitalsData isData={vitalRecord} />
-              <Button onClick={handleAddDataOpen} overrideStyle={styles.addBtn}>
-                <Text color="theme" size={14}>
-                  + Edit Data
-                </Text>
-              </Button>
-            </Flex>
-          )}
-          {labReportList.length > 0 && <DocumentList data={labReportList} />}
+          <Flex>
+            <Text type="heading500" overrideStyle={{ marginTop: 20 }}>
+              Record Vitals:
+            </Text>
+
+            <RecordVitalsData isData={vitalRecord} />
+            <Button onClick={handleAddDataOpen} overrideStyle={styles.addBtn}>
+              <Text color="theme" size={14}>
+                + Edit Data
+              </Text>
+            </Button>
+          </Flex>
+
+          <DocumentList data={[{}, {}, {}]} />
           {/* <Button overrideStyle={styles.addBtn}>
             <Text color="theme" size={14}>
               + Add Doc
             </Text>
           </Button> */}
-          {priscriptionList[0]?.medicine?.id && (
-            <>
-              <Text type="heading500" overrideStyle={styles.prescriptionText}>
-                Prescription
-              </Text>
-              <PrescriptionList
-                items={priscriptionList}
-                handleDetailedScreen={handlePrescribe}
-              />
-            </>
-          )}
+
+          <>
+            <Text type="heading500" overrideStyle={styles.prescriptionText}>
+              Prescription
+            </Text>
+            <PrescriptionList
+              items={tabletList}
+              handleDetailedScreen={handlePrescribe}
+            />
+          </>
           {data.status !== 'upcoming' && (
             <AppointmentDetails
               item={data}

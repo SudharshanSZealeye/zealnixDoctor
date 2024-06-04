@@ -1,6 +1,6 @@
 import React from 'react';
-import {FlatList, View} from 'react-native';
-import {useSafeAreaFrame} from 'react-native-safe-area-context';
+import { FlatList, View } from 'react-native';
+import { useSafeAreaFrame } from 'react-native-safe-area-context';
 import {
   Button,
   Flex,
@@ -11,14 +11,15 @@ import {
   helpers,
 } from 'squashapps-react-native-uikit';
 import moment from 'moment';
-import {APP_THEME} from '../../utils/constants';
+import { APP_THEME } from '../../utils/constants';
 import AppointmentInnerListCard from './AppointmentInnerListCard';
-import {TodaysAppointmentList} from './store/home.types';
-import {getCurrentTime} from '../../utils/helpers';
+import { TodaysAppointmentList } from './store/home.types';
+import { getCurrentTime } from '../../utils/helpers';
+import { appointmentData } from './mock';
 
-const {PRIMARY_COLOR_500} = getColors(APP_THEME);
-const {SvgCalenderTick, SvgClock, SvgVideoCircle} = Icons;
-const {getDateString} = helpers;
+const { PRIMARY_COLOR_500 } = getColors(APP_THEME);
+const { SvgCalenderTick, SvgClock, SvgVideoCircle } = Icons;
+const { getDateString } = helpers;
 
 const styles = StyleSheet.create({
   overAll: {
@@ -55,23 +56,14 @@ type Props = {
   items: TodaysAppointmentList;
   handleView: Function;
 };
-const AppointmentsCard = ({items, handleView, handleVideo}: Props) => {
-  const {width} = useSafeAreaFrame();
+const AppointmentsCard = ({ items, handleView, handleVideo }: Props) => {
+  const { width } = useSafeAreaFrame();
 
-  const appointmentData = [
-    {
-      profile: items?.patient?.profilePicUrl,
-      name: items?.patient?.name,
-      age: (
-        moment().year() - moment(items?.patient?.dateOfBirth).year()
-      ).toString(),
-      gender: items?.patient?.gender,
-    },
-  ];
+
 
   return (
     <Button type="link" onClick={() => handleView(items.id)}>
-      <Flex overrideStyle={[styles.overAllContainer, {width}]}>
+      <Flex overrideStyle={[styles.overAllContainer, { width }]}>
         <Flex overrideStyle={[styles.overAll]}>
           <Flex row between>
             <Flex between>
@@ -81,12 +73,7 @@ const AppointmentsCard = ({items, handleView, handleVideo}: Props) => {
                   overrideStyle={styles.dateText}
                   type="heading500"
                   color="white">
-                  {getDateString(
-                    items.appointmentDate,
-                    'Do MMM YYYY',
-                    false,
-                    true,
-                  )}
+                  17th May,2024
                 </Text>
               </Flex>
               <Flex row center overrideStyle={styles.clockConatiner}>
@@ -95,13 +82,8 @@ const AppointmentsCard = ({items, handleView, handleVideo}: Props) => {
                   overrideStyle={styles.dateText}
                   type="heading500"
                   color="white">
-                  {getCurrentTime(
-                    items?.appointmentSchedule?.appointmentRangeStart,
-                  )}{' '}
-                  -{' '}
-                  {getCurrentTime(
-                    items?.appointmentSchedule?.appointmentRangeEnd,
-                  )}{' '}
+                  10:00AM
+                  -12:00PM
                 </Text>
               </Flex>
             </Flex>
@@ -120,7 +102,7 @@ const AppointmentsCard = ({items, handleView, handleVideo}: Props) => {
               bounces={false}
               data={appointmentData}
               keyExtractor={(_item, index) => index.toString()}
-              renderItem={({item, index}) => (
+              renderItem={({ item, index }) => (
                 <AppointmentInnerListCard
                   totalLength={appointmentData.length}
                   index={index}

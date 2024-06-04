@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
+import React, { useEffect } from 'react';
+import { FlatList, StyleSheet, View } from 'react-native';
 import {
   Button,
   Card,
@@ -9,23 +9,24 @@ import {
   Text,
   getColors,
 } from 'squashapps-react-native-uikit';
-import {useDispatch, useSelector} from 'react-redux';
-import {RouteProp, useRoute, useNavigation} from '@react-navigation/native';
-import {APP_THEME} from '../../utils/constants';
+import { useDispatch, useSelector } from 'react-redux';
+import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
+import { APP_THEME } from '../../utils/constants';
 import MedicineEmpty from './MedicineEmpty';
 import PrescriptionCard from './PrescriptionCard';
-import {AppDispatch, RootState} from '../../redux/store';
+import { AppDispatch, RootState } from '../../redux/store';
 
 import {
   deletePrescriptionMiddleWare,
   prescriptionsListMiddleWare,
 } from './store/prescribeMiddleware';
+import { tabletList } from '../AppointmentModule/mock';
 
-const {PRIMARY_COLOR_500} = getColors(APP_THEME);
+const { PRIMARY_COLOR_500 } = getColors(APP_THEME);
 type ParamListBase = {
-  sample: {appointmentId: string};
+  sample: { appointmentId: string };
 };
-interface SampleRouteProp extends RouteProp<ParamListBase, 'sample'> {}
+interface SampleRouteProp extends RouteProp<ParamListBase, 'sample'> { }
 
 const styles = StyleSheet.create({
   btnContainer: {
@@ -59,20 +60,20 @@ const PrescribeMedicineScreen = () => {
   const navigation = useNavigation();
   const dispatch: AppDispatch = useDispatch();
   const route = useRoute<SampleRouteProp>();
-  const {appointmentId} = route.params;
+  const { appointmentId } = route.params;
 
-  useEffect(() => {
-    dispatch(
-      prescriptionsListMiddleWare({
-        where: {
-          appointmentId,
-        },
-      }),
-    );
-  }, []);
+  // useEffect(() => {
+  //   dispatch(
+  //     prescriptionsListMiddleWare({
+  //       where: {
+  //         appointmentId,
+  //       },
+  //     }),
+  //   );
+  // }, []);
 
-  const {data, isLoading} = useSelector(
-    ({prescriptionsListReducers}: RootState) => {
+  const { data, isLoading } = useSelector(
+    ({ prescriptionsListReducers }: RootState) => {
       return {
         data: prescriptionsListReducers.data,
         isLoading: prescriptionsListReducers.isLoading,
@@ -91,37 +92,37 @@ const PrescribeMedicineScreen = () => {
     });
   };
 
-  const handleDelete = (id: string) => {
-    dispatch(deletePrescriptionMiddleWare({prescriptionId: id})).then(res => {
-      if (res) {
-        dispatch(
-          prescriptionsListMiddleWare({
-            where: {
-              appointmentId: '647f11525b32fe2cb85784c8',
-            },
-          }),
-        );
-      }
-    });
+  const handleDelete = () => {
+    // dispatch(deletePrescriptionMiddleWare({ prescriptionId: id })).then(res => {
+    //   if (res) {
+    //     dispatch(
+    //       prescriptionsListMiddleWare({
+    //         where: {
+    //           appointmentId: '647f11525b32fe2cb85784c8',
+    //         },
+    //       }),
+    //     );
+    //   }
+    // });
   };
   return (
     <>
       {isLoading && <Loader />}
       <Flex flex={1} overrideStyle={styles.overAll}>
         <FlatList
-          data={data}
+          data={[{}, {}, {}]}
           keyExtractor={(_item, index) => index.toString()}
-          renderItem={({item}) => (
+          renderItem={({ item }) => (
             <Card align="stretch" overrideStyle={styles.cardOverAll}>
               <PrescriptionCard
-                manufacturer={item.medicine.manufacturer}
+                manufacturer={"Sun Pharama"}
                 quantity={3}
                 isTime
-                title={item.medicine.name}
-                dosageTimes={item.dosageTimes}
-                dosage={item.quantity}
-                image={item.medicine.image}
-                handleTrash={() => handleDelete(item.id)}
+                title={"Parcetamol"}
+                dosageTimes="10"
+                dosage="10"
+                image={"https://i.ibb.co/2YRh8Nw/Rectangle-3318-2.png"}
+                handleTrash={handleDelete}
               />
             </Card>
           )}

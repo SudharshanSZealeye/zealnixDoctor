@@ -104,8 +104,8 @@ const LoginScreen = () => {
   });
 
   const handleSubmit = (value: formType, formikHelper: FormikHelpers<any>) => {
-    const defaultEmail = 'user@example.com';
-    const defaultPassword = 'password123';
+    const defaultEmail = 'hms@zenix.com';
+    const defaultPassword = 'Zealeye@123';
 
     if (value.email === defaultEmail && value.password === defaultPassword) {
       formikHelper.resetForm();

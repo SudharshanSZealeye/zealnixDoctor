@@ -13,16 +13,16 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import ProfileWithStatus from '../../common/ProfileWithStatus';
 import TitleWithValue from '../../common/TitleWithValue';
-import {APP_THEME, USER_PROFILE} from '../../utils/constants';
-import {AppointmentDetails} from './store/appointment.types';
-import {getCurrentTime, getStatusBackground} from '../../utils/helpers';
+import { APP_THEME, USER_PROFILE } from '../../utils/constants';
+import { AppointmentDetails } from './store/appointment.types';
+import { getCurrentTime, getStatusBackground } from '../../utils/helpers';
 
-const {SvgTimePeding, SvgCalenderTick, SvgVideoCircle, SvgCrown, SvgMapRound} =
+const { SvgTimePeding, SvgCalenderTick, SvgVideoCircle, SvgCrown, SvgMapRound } =
   Icons;
 
-const {NEUTRAL_500, PRIMARY_COLOR_500} = getColors(APP_THEME);
+const { NEUTRAL_500, PRIMARY_COLOR_500 } = getColors(APP_THEME);
 
-const {getDateString, ageCalculator} = helpers;
+const { getDateString, ageCalculator } = helpers;
 
 const styles = StyleSheet.create({
   nameFLex: {
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
 type Props = {
   data: AppointmentDetails;
 };
-const AppointmentDetailsProfile = ({data}: Props) => {
+const AppointmentDetailsProfile = ({ data }: Props) => {
   let appointmentTypeSvgType = <SvgMapRound />;
 
   if (data && data.type === 'regular') {
@@ -94,14 +94,14 @@ const AppointmentDetailsProfile = ({data}: Props) => {
         />
         <Flex flex={1} overrideStyle={styles.nameContainer}>
           <Flex row center between overrideStyle={styles.nameFLex}>
-            <Text type="heading600">{data?.patient && data.patient?.name}</Text>
+            <Text type="heading600">Pathimuga Pandiyan</Text>
             <Button type="link">
               <SvgTimePeding fill="#3366FF" />
             </Button>
           </Flex>
           <Text color="gray" type="body100" transform="capitalize">
-            {ageCalculator(data && data?.patient?.dateOfBirth)} Years{' '}
-            {data?.patient && data.patient.gender}
+            40 Years
+            Yuvaraj ,Male
           </Text>
         </Flex>
       </Flex>
@@ -109,21 +109,17 @@ const AppointmentDetailsProfile = ({data}: Props) => {
         <SvgCalenderTick fill={NEUTRAL_500} />
 
         <Text overrideStyle={styles.dateText} type="body100">
-          {data &&
-            getDateString(data.appointmentDate, 'Do MMM YYYY', false, true)}
-          .{' '}
-          {data &&
-            getCurrentTime(data.appointmentSchedule?.appointmentRangeStart)}
+          17th May 2024,10:00AM-12:00PM
         </Text>
       </Flex>
       <TitleWithValue
         title="Status :  "
         value={
           <Status
-            overrideStyle={{textTransform: 'capitalize'}}
+            overrideStyle={{ textTransform: 'capitalize' }}
             type="rounded"
-            label={data && data.status}
-            color={data && getStatusBackground(data.status)}
+            label={"upcoming"}
+            color={getStatusBackground("upcoming")}
           />
         }
       />
@@ -136,19 +132,19 @@ const AppointmentDetailsProfile = ({data}: Props) => {
               transform="capitalize"
               color="inprogress"
               overrideStyle={styles.appointmentTypeText}>
-              {data?.type}
+              Premium
             </Text>
           </Flex>
         }
       />
-      <TitleWithValue title="Token ID :  " value={data && data.tokenId} />
+      <TitleWithValue title="Token ID :  " value="1234" />
       <TitleWithValue title="Appointment Subject : " />
       <Text type="heading400" overrideStyle={styles.majorText}>
-        {data && data.title}
+        Leg Injury
       </Text>
-      {data?.notes && (
-        <ReadMoreText text={(data?.notes && data?.notes) || ''} />
-      )}
+    
+        <ReadMoreText text={"Leg Injury is been there for 12 days" || ''} />
+      
     </Flex>
   );
 };

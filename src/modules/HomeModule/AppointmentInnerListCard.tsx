@@ -8,10 +8,10 @@ import {
   StyleSheet,
   Text,
 } from 'squashapps-react-native-uikit';
-import {APP_THEME, USER_PROFILE} from '../../utils/constants';
+import { APP_THEME, USER_PROFILE } from '../../utils/constants';
 
-const {WHITE, NEUTRAL_500, PRIMARY_COLOR_50} = getColors(APP_THEME);
-const {SvgMessage} = Icons;
+const { WHITE, NEUTRAL_500, PRIMARY_COLOR_50 } = getColors(APP_THEME);
+const { SvgMessage } = Icons;
 
 const styles = StyleSheet.create({
   inlineCard: {
@@ -46,7 +46,7 @@ type Props = {
   totalLength: number;
 };
 
-const AppointmentInnerListCard = ({item, index, totalLength}: Props) => {
+const AppointmentInnerListCard = ({ item, index, totalLength }: Props) => {
   const containerStyle = [
     styles.inlineCard,
     {
@@ -55,7 +55,7 @@ const AppointmentInnerListCard = ({item, index, totalLength}: Props) => {
       borderBottomEndRadius: totalLength - 1 === index ? 15 : 0,
       borderBottomStartRadius: totalLength - 1 === index ? 15 : 0,
     },
-  ];  
+  ];
   return (
     <Card disabled align="stretch" overrideStyle={containerStyle}>
       <Flex row center between>
@@ -69,7 +69,7 @@ const AppointmentInnerListCard = ({item, index, totalLength}: Props) => {
           <Flex between overrideStyle={styles.nameContainer}>
             <Text type="heading400">{item.name}</Text>
             <Text type="heading200" color="gray" transform="capitalize">
-              {item.age}y, {item.gender}
+              30yrs, Male
             </Text>
           </Flex>
         </Flex>

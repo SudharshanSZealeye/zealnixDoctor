@@ -1,7 +1,7 @@
-import React, {useEffect, useMemo, useState} from 'react';
-import {useFormik} from 'formik';
-import {filter} from 'lodash';
-import {FlatList, TouchableOpacity, View} from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useFormik } from 'formik';
+import { filter } from 'lodash';
+import { FlatList, TouchableOpacity, View } from 'react-native';
 import {
   Flex,
   StyleSheet,
@@ -9,9 +9,9 @@ import {
   Loader,
   validators,
 } from 'squashapps-react-native-uikit';
-import {useDispatch, useSelector} from 'react-redux';
-import {useNavigation, RouteProp, useRoute} from '@react-navigation/native';
-import {AppDispatch, RootState} from '../../redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigation, RouteProp, useRoute } from '@react-navigation/native';
+import { AppDispatch, RootState } from '../../redux/store';
 import SearchBar from '../../common/SearchBar';
 import PrescribeMedicinePopup from './PrescribeMedicinePopUp';
 import PrescriptionCard from './PrescriptionCard';
@@ -22,10 +22,11 @@ import {
   postPresciptionMiddleWare,
   prescriptionsListMiddleWare,
 } from './store/prescribeMiddleware';
-import {useLanguage} from '../../utils/useLanguage';
+import { useLanguage } from '../../utils/useLanguage';
+import { tabletList } from '../AppointmentModule/mock';
 
-const {isEmpty} = validators;
-const {THIS_FIELD_REQUIRED} = useLanguage;
+const { isEmpty } = validators;
+const { THIS_FIELD_REQUIRED } = useLanguage;
 const styles = StyleSheet.create({
   overAll: {
     marginLeft: 20,
@@ -56,9 +57,9 @@ const initialValues: formTypePrescribe = {
   medicineId: '',
 };
 type ParamListBase = {
-  sample: {appointmentId: string};
+  sample: { appointmentId: string };
 };
-interface SampleRouteProp extends RouteProp<ParamListBase, 'sample'> {}
+interface SampleRouteProp extends RouteProp<ParamListBase, 'sample'> { }
 
 const validate = (values: formTypePrescribe) => {
   const errors: Partial<formTypePrescribe> = {};
@@ -82,18 +83,18 @@ const AllMedicineListScreen = () => {
   const navigation = useNavigation();
   const dispatch: AppDispatch = useDispatch();
   const route = useRoute<SampleRouteProp>();
-  const {appointmentId} = route.params;
+  const { appointmentId } = route.params;
 
   const [search, setSearch] = useState<string>('');
   const handleNameChange = (val: string) => {
     setSearch(val);
   };
 
-  useEffect(() => {
-    dispatch(medicinesListMiddleWare());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(medicinesListMiddleWare());
+  // }, []);
 
-  const {data, isLoading, listData, appointmentDetails} = useSelector(
+  const { data, isLoading, listData, appointmentDetails } = useSelector(
     ({
       medicinesListReducers,
       prescriptionsListReducers,
@@ -110,67 +111,13 @@ const AllMedicineListScreen = () => {
 
   const handleAddDataClose = () => setAddData(false);
 
-  const handleSave = (val: formTypePrescribe) => {
-    const appointments = listData.find(
-      appointment => appointment.medicineId === val.medicineId,
-    );
-    if (appointments) {
-      dispatch(
-        patchPresciptionMiddleWare({
-          quantity: parseInt(val.quantity, 10),
-          id: appointments.id,
-          dosageTimes: val.timing,
-          dosage: val.dosage,
-          autoReorder: val.autoReOrder,
-          appointmentId: appointmentDetails.id,
-          medicineId: val.medicineId,
-        }),
-      ).then(res => {
-        if (res) {
-          dispatch(
-            prescriptionsListMiddleWare({
-              where: {
-                appointmentId,
-              },
-            }),
-          ).then(response => {
-            if (response) {
-              navigation.navigate('PrescribeMedicineScreen', {
-                appointmentId,
-              });
-            }
-          });
-        }
-      });
-    } else {
-      dispatch(
-        postPresciptionMiddleWare({
-          quantity: parseInt(val.quantity, 10),
-          dosageTimes: val.timing,
-          dosage: val.dosage,
-          autoReorder: val.autoReOrder,
-          appointmentId: appointmentDetails.id,
-          medicineId: val.medicineId,
-        }),
-      ).then(res => {
-        if (res.payload) {
-          console.log(res.payload, 'as');
-          dispatch(
-            prescriptionsListMiddleWare({
-              where: {
-                appointmentId,
-              },
-            }),
-          ).then(response => {
-            if (response) {
-              navigation.navigate('PrescribeMedicineScreen', {
-                appointmentId,
-              });
-            }
-          });
-        }
-      });
-    }
+  const handleSave = () => {
+
+    navigation.navigate('PrescribeMedicineScreen', {
+      appointmentId,
+
+
+    })
     handleAddDataClose();
   };
 
@@ -181,12 +128,12 @@ const AllMedicineListScreen = () => {
   });
 
   const handleAddDataOpen = (val: string) => {
-    dispatch(getMedicineMiddleWare({medicineId: val})).then(res => {
-      if (res.payload?.id) {
-        setAddData(true);
-        formik.setFieldValue('medicineId', res.payload.id);
-      }
-    });
+    // dispatch(getMedicineMiddleWare({ medicineId: val })).then(res => {
+    //   if (res.payload?.id) {
+    setAddData(true);
+    //     formik.setFieldValue('medicineId', res.payload.id);
+    //   }
+    // });
   };
 
   const searchByDrugName = (input: string) => {
@@ -198,10 +145,10 @@ const AllMedicineListScreen = () => {
 
     return filteredData;
   };
-  const result = useMemo(() => {
-    const output = search ? searchByDrugName(search) : data;
-    return output;
-  }, [search, data]);
+  // const result = useMemo(() => {
+  //   const output = search ? searchByDrugName(search) : data;
+  //   return output;
+  // }, [search, data]);
 
   return (
     <>
@@ -222,25 +169,25 @@ const AllMedicineListScreen = () => {
         <FlatList
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
-          data={result}
+          data={tabletList}
           keyExtractor={(_item, index) => index.toString()}
-          renderItem={({item}) => (
+          renderItem={({ item }) => (
             <TouchableOpacity
-              onPress={() => handleAddDataOpen(item.id)}
-              disabled={item.totalStock === 0}>
+              onPress={handleAddDataOpen}
+              disabled={false}>
               <Flex overrideStyle={styles.overAll}>
                 <PrescriptionCard
-                  image={item.image}
+                  image={item.img}
                   imageHeight={50}
                   imageWidth={50}
-                  manufacturer={item.manufacturer}
-                  quantity={item.totalStock}
+                  manufacturer={item.brand}
+                  quantity={item.availableQuantity}
                   title={item.name}
                 />
               </Flex>
             </TouchableOpacity>
           )}
-          ListFooterComponent={<View style={{height: 100}} />}
+          ListFooterComponent={<View style={{ height: 100 }} />}
         />
       </Flex>
     </>

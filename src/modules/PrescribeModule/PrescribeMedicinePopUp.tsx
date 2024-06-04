@@ -1,6 +1,6 @@
 /* eslint-disable */
-import {FormikProps} from 'formik';
-import React, {useState} from 'react';
+import { FormikProps } from 'formik';
+import React, { useState } from 'react';
 import {
   Flex,
   Modal,
@@ -12,14 +12,14 @@ import {
   Icons,
   LabelWrapper,
 } from 'squashapps-react-native-uikit';
-import {useSelector} from 'react-redux';
-import {autoReOrder, dosage, order, qunatity, timing} from './mock';
-import {formTypePrescribe} from './AllMedicineListScreen';
+import { useSelector } from 'react-redux';
+import { autoReOrder, dosage, order, qunatity, timing } from './mock';
+import { formTypePrescribe } from './AllMedicineListScreen';
 import CustomQuantityPopUp from './CustomQuantityPopUp';
-import {RootState} from '../../redux/store';
+import { RootState } from '../../redux/store';
 import PrescriptionCard from './PrescriptionCard';
 
-const {SvgClose} = Icons;
+const { SvgClose } = Icons;
 const styles = StyleSheet.create({
   overAll: {
     backgroundColor: Colors.WHITE,
@@ -51,11 +51,11 @@ type Props = {
   close: () => void;
 };
 
-const PrescribeMedicinePopup = ({formik, open, close}: Props) => {
+const PrescribeMedicinePopup = ({ formik, open, close }: Props) => {
   const [isCustomOpen, setCustomOpen] = useState(false);
   const handleCustomPopUpOpen = () => setCustomOpen(true);
   const handleCustomPopUpClose = () => setCustomOpen(false);
-  const {data} = useSelector(({getMedicineReducers}: RootState) => {
+  const { data } = useSelector(({ getMedicineReducers }: RootState) => {
     return {
       data: getMedicineReducers.data,
     };
@@ -81,12 +81,12 @@ const PrescribeMedicinePopup = ({formik, open, close}: Props) => {
           <Text color="gray">Provide Instructions to consume medicine</Text>
           <Flex overrideStyle={styles.prescriptionCard}>
             <PrescriptionCard
-              title={data.name}
+              title={"Pacentamal"}
               imageHeight={50}
               imageWidth={50}
-              manufacturer={data.manufacturer}
-              quantity={data.totalStock}
-              image={data.image}
+              manufacturer={"manufacturer"}
+              quantity={"totalStock"}
+              image={"image"}
             />
           </Flex>
           <Flex overrideStyle={styles.inputMarignBottom}>

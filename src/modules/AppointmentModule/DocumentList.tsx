@@ -6,13 +6,13 @@ import {
   StyleSheet,
   Icons,
 } from 'squashapps-react-native-uikit';
-import {FlatList, TouchableOpacity} from 'react-native';
+import { FlatList, TouchableOpacity } from 'react-native';
 import RNFetchBlob from 'rn-fetch-blob';
 import TitleWithValue from '../../common/TitleWithValue';
-import {LabReoprtType} from './store/appointment.types';
-import {extractFileNameFromURL} from '../../utils/helpers';
+import { LabReoprtType } from './store/appointment.types';
+import { extractFileNameFromURL } from '../../utils/helpers';
 
-const {SvgDocument, SvgFileDownload} = Icons;
+const { SvgDocument, SvgFileDownload } = Icons;
 
 const styles = StyleSheet.create({
   overAll: {
@@ -30,7 +30,7 @@ type DocumentListProp = {
 };
 const downloadFile = async (url: string) => {
   try {
-    const {dirs} = RNFetchBlob.fs;
+    const { dirs } = RNFetchBlob.fs;
     console.log(dirs, 'dir');
     const path = `${dirs.DownloadDir}/${extractFileNameFromURL(url)}`; // Replace 'filename.ext' with the desired file name and extension
 
@@ -49,7 +49,7 @@ const downloadFile = async (url: string) => {
   }
 };
 
-const DocumentList = ({data}: DocumentListProp) => {
+const DocumentList = ({ data }: any) => {
   return (
     <Flex>
       <TitleWithValue title="Reports" />
@@ -57,27 +57,26 @@ const DocumentList = ({data}: DocumentListProp) => {
       <FlatList
         data={data}
         keyExtractor={(item, index) => (1 + index).toString()}
-        renderItem={({item}) => (
+        renderItem={({ item }) => (
           <Flex>
             <Text type="heading400" overrideStyle={styles.marginLeft20}>
-              {item?.lab?.name}
+              Lab Report
             </Text>
-            {item?.reportFileUrl &&
-              item?.reportFileUrl.map(url => (
-                <Card outline align="stretch" overrideStyle={styles.overAll}>
-                  <Flex row middle between>
-                    <Flex row>
-                      <SvgDocument />
-                      <Text type="body300" overrideStyle={styles.marginLeft20}>
-                        {extractFileNameFromURL(url)}
-                      </Text>
-                    </Flex>
-                    <TouchableOpacity onPress={() => downloadFile(url)}>
-                      <SvgFileDownload />
-                    </TouchableOpacity>
-                  </Flex>
-                </Card>
-              ))}
+
+            <Card outline align="stretch" overrideStyle={styles.overAll}>
+              <Flex row middle between>
+                <Flex row>
+                  <SvgDocument />
+                  <Text type="body300" overrideStyle={styles.marginLeft20}>
+                    {/* {extractFileNameFromURL(url)} */}Pathi X-ray
+                  </Text>
+                </Flex>
+                <TouchableOpacity onPress={() => console.log('as')}>
+                  <SvgFileDownload />
+                </TouchableOpacity>
+              </Flex>
+            </Card>
+
           </Flex>
         )}
       />

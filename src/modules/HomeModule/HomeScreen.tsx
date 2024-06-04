@@ -1,8 +1,8 @@
 /* eslint-disable */
-import React, {useEffect} from 'react';
-import {RefreshControl, ScrollView, View} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {useDispatch, useSelector} from 'react-redux';
+import React, { useEffect } from 'react';
+import { RefreshControl, ScrollView, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import SwiperFlatList from 'react-native-swiper-flatlist';
 import {
@@ -14,15 +14,15 @@ import {
 } from 'squashapps-react-native-uikit';
 import CustomStatusBar from '../../common/CustomStatusBar';
 import TitleWithViewAll from '../../common/TitleWithViewAll';
-import {AppDispatch, RootState} from '../../redux/store';
-import {getCurentMini} from '../../utils/helpers';
+import { AppDispatch, RootState } from '../../redux/store';
+import { getCurentMini } from '../../utils/helpers';
 import {
   appoinmentDetailsMiddleWare,
   getLabReportList,
   vitalListMiddleWare,
   tokenGenerateMiddleWare,
 } from '../AppointmentModule/store/appoinmentMiddleware';
-import {getUserMiddleWare} from '../ProfileModule/store/profileMiddleware';
+import { getUserMiddleWare } from '../ProfileModule/store/profileMiddleware';
 import AppointmentsCard from './AppointmentsCard';
 import HomeHeader from './HomeHeader';
 import StatusCard from './StatusCard';
@@ -31,8 +31,9 @@ import {
   recentappointmentMiddleWare,
   todaysappointmentMiddleWare,
 } from './store/homeMiddleware';
-import {TodaysAppointmentList} from './store/home.types';
-import {prescriptionsListMiddleWare} from '../PrescribeModule/store/prescribeMiddleware';
+import { TodaysAppointmentList } from './store/home.types';
+import { prescriptionsListMiddleWare } from '../PrescribeModule/store/prescribeMiddleware';
+import { appointmentData, recentAppointmentMock } from './mock';
 
 const styles = StyleSheet.create({
   overAll: {
@@ -92,9 +93,9 @@ const HomeScreen = () => {
     },
   );
 
-  useEffect(() => {
-    getCall();
-  }, []);
+  // useEffect(() => {
+  //   getCall();
+  // }, []);
 
   const getCall = () => {
     dispatch(
@@ -139,57 +140,19 @@ const HomeScreen = () => {
   const handleAppointment = () => {
     navigation.navigate('BottomTab', {
       screen: 'AppointmentTab',
-      params: {screen: 'AppointmentsScreen'},
+      params: { screen: 'AppointmentsScreen' },
     });
   };
   const [refreshing, setRefreshing] = React.useState(false);
 
   const handleView = (id: string) => {
-    dispatch(
-      appoinmentDetailsMiddleWare({
-        appointmentId: id,
-        include: ['hospital', 'patient', 'doctor', 'appointmentSchedule'],
-      }),
-    ).then(res => {
-      if (res.payload?.id) {
-        dispatch(
-          prescriptionsListMiddleWare({
-            where: {
-              appointmentId: res.payload?.id,
-            },
-          }),
-        ).then(response => {
-          if (response.payload) {
-            dispatch(
-              vitalListMiddleWare({
-                where: {
-                  appointmentId: res.payload.id,
-                },
-              }),
-            ).then(data => {
-              if (data.payload) {
-                dispatch(
-                  getLabReportList({
-                    where: {
-                      patientId: res.payload.patientId,
-                    },
-                    include: [{relation: 'lab'}],
-                  }),
-                ).then(responseee => {
-                  if (responseee.payload) {
-                    navigation.navigate('BottomTab', {
-                      screen: 'AppointmentTab',
-                      params: {screen: 'AppointmentDetailsScreen'},
-                    });
-                  }
-                });
-              }
-            });
-          }
-        });
-      }
+    navigation.navigate('BottomTab', {
+      screen: 'AppointmentTab',
+      params: { screen: 'AppointmentDetailsScreen' },
     });
-  };
+  }
+
+
 
   const handleVideo = (e: string) => {
     dispatch(
@@ -203,39 +166,33 @@ const HomeScreen = () => {
     });
   };
 
-  const onRefresh = React.useCallback(() => {
-    // setRefreshing(true);
-    getCall();
-    setTimeout(() => {
-      // setRefreshing(false);
-    }, 2000);
-  }, []);
+  // const onRefresh = React.useCallback(() => {
+  //   // setRefreshing(true);
+  //   getCall();
+  //   setTimeout(() => {
+  //     // setRefreshing(false);
+  //   }, 2000);
+  // }, []);
 
   return (
     <>
-      {(isLoading ||
-        isRecentAppointmentLoading ||
-        labReportLoading ||
-        appoinmentDetailsLoading ||
-        prescriptionsListLoader ||
-        vitalListLoader ||
-        labReportLoader) && <Loader />}
+
       <CustomStatusBar barStyle="dark-content" backgroundColor={Colors.WHITE} />
       <Flex overrideStyle={styles.overAll}>
         <HomeHeader />
         <ScrollView
           nestedScrollEnabled
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            <RefreshControl refreshing={refreshing} onRefresh={() => console.log('data')} />
           }>
           <TitleWithViewAll
             title="Today’s Appointments"
             hanldeView={handleAppointment}
           />
-          {appointment?.length > 0 ? (
+          {appointmentData?.length > 0 ? (
             <SwiperFlatList
-              data={appointment}
-              renderItem={({item}) => (
+              data={appointmentData}
+              renderItem={({ item }) => (
                 <AppointmentsCard
                   items={item}
                   handleView={handleView}
@@ -245,7 +202,7 @@ const HomeScreen = () => {
               keyExtractor={(_item, index) => index.toString()}
             />
           ) : (
-            <Flex center middle overrideStyle={{marginVertical: 20}}>
+            <Flex center middle overrideStyle={{ marginVertical: 20 }}>
               <Text color="gray" type="heading500">
                 No Appointments Today
               </Text>
@@ -256,15 +213,15 @@ const HomeScreen = () => {
             title="Recent Appointments"
             hanldeView={handleAppointment}
           />
-          {recentAppointment?.length > 0 ? (
-            recentAppointment
+          {recentAppointmentMock?.length > 0 ? (
+            recentAppointmentMock
               ?.slice(0, 2)
-              .map((item: TodaysAppointmentList, index: number) => (
+              .map((item: any, index: number) => (
                 <View
                   style={{
                     marginHorizontal: 20,
                     marginBottom:
-                      recentAppointment?.slice(0, 2)?.length === index + 1
+                      recentAppointmentMock?.slice(0, 2)?.length === index + 1
                         ? 100
                         : 0,
                   }}>
@@ -272,7 +229,7 @@ const HomeScreen = () => {
                 </View>
               ))
           ) : (
-            <Flex center middle overrideStyle={{marginVertical: 20}}>
+            <Flex center middle overrideStyle={{ marginVertical: 20 }}>
               <Text color="gray" type="heading500">
                 No Appointments Today
               </Text>

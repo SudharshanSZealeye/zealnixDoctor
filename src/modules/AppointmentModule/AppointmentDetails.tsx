@@ -38,7 +38,7 @@ const AppointmentDetails = ({handleFullView, isView, item}: Props) => {
         title="Token ID"
         titleColor="gray"
         titleSize="body200"
-        value={item?.tokenId}
+        value={"123"}
       />
       <TitleWithValue
         between
